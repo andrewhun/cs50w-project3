@@ -1,0 +1,12 @@
+{% extends "orders/base.html" %}
+{% block title %}Register{% endblock %}
+{% block main %}
+	{% if message %}
+		<div class = "alert alert-danger">{{ message }}</div>
+	{% endif %}
+	<form action = "{% url 'register' %}" method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type = "submit" class = "btn btn-secondary">Register</button>
+	</form>
+{% endblock %}

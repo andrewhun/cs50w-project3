@@ -1,0 +1,435 @@
+{% extends "orders/base.html" %}
+
+{%block title%}Home{% endblock %}
+
+{%block main%}
+	<div id = "my_menu">
+		<h2>Our Menu</h2>
+		<div class="internalmenunav">
+			<a href="#regular_pizza_menu">Regular Pizza</a> |
+			<a href="#sicilian_pizza_menu">Sicilian Pizza</a> |
+			<a href="#toppings_menu">Toppings</a> |
+			<a href="#subs_menu">Subs</a> |
+			<a href="#pasta_menu">Pasta</a> |
+			<a href="#salads_menu">Salad</a> |
+			<a href="#platters_menu">Dinner Platters</a> 
+		</div>
+		<table class = "my_food">
+			<tr>
+				<th colspan="3" id = "regular_pizza_menu">Regular Pizza</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Small</td>
+				<td>Large</td>
+			</tr>
+			{% for regular in regular_list %}
+			<tr>
+				<td>{{regular.0}}</td>
+				<td>{{regular.1}}</td>
+				<td>{{regular.2}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<div class="internalmenunav">
+			<a href="#regular_pizza_menu">Regular Pizza</a> |
+			<a href="#sicilian_pizza_menu">Sicilian Pizza</a> |
+			<a href="#toppings_menu">Toppings</a> |
+			<a href="#subs_menu">Subs</a> |
+			<a href="#pasta_menu">Pasta</a> |
+			<a href="#salads_menu">Salad</a> |
+			<a href="#platters_menu">Dinner Platters</a> 
+		</div>
+		<table  class = "my_food">
+			<tr>
+				<th colspan="3" id = "sicilian_pizza_menu">Sicilian Pizza</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Small</td>
+				<td>Large</td>
+			</tr>
+			{% for sicilian in sicilian_list %}
+			<tr>
+				<td>{{sicilian.0}}</td>
+				<td>{{sicilian.1}}</td>
+				<td>{{sicilian.2}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<div class="internalmenunav">
+			<a href="#regular_pizza_menu">Regular Pizza</a> |
+			<a href="#sicilian_pizza_menu">Sicilian Pizza</a> |
+			<a href="#toppings_menu">Toppings</a> |
+			<a href="#subs_menu">Subs</a> |
+			<a href="#pasta_menu">Pasta</a> |
+			<a href="#salads_menu">Salad</a> |
+			<a href="#platters_menu">Dinner Platters</a> 
+		</div>
+		<table class = "my_toppings">
+			<tr>
+				<th colspan="2" id = "toppings_menu">Toppings</th>
+			</tr>
+			{% for topping in toppings %}
+				<tr>
+					<td>{{ topping.name }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<div class="internalmenunav">
+			<a href="#regular_pizza_menu">Regular Pizza</a> |
+			<a href="#sicilian_pizza_menu">Sicilian Pizza</a> |
+			<a href="#toppings_menu">Toppings</a> |
+			<a href="#subs_menu">Subs</a> |
+			<a href="#pasta_menu">Pasta</a> |
+			<a href="#salads_menu">Salad</a> |
+			<a href="#platters_menu">Dinner Platters</a> 
+		</div>
+		<table  class = "my_food">
+			<tr>
+				<th colspan="3" id = "subs_menu">Subs</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Small</td>
+				<td>Large</td>
+			</tr>
+			{% for k, v in subs.items %}
+				<tr>
+					<td>{{ k }}</td>
+					<td>{{ v.0 }}</td>
+					<td>{{ v.1 }}</td>
+				</tr>
+				{% if k == "Steak + Cheese" %}
+					{% for k,v in sub_extras.items %}
+						<tr>
+							<td>{{ k }}</td>
+							<td>{{ v.0 }}</td>
+							<td>{{ v.1 }}</td>
+						</tr>
+					{% endfor %}
+				{% endif %}
+			{% endfor %}
+		</table>
+		<div class="internalmenunav">
+			<a href="#regular_pizza_menu">Regular Pizza</a> |
+			<a href="#sicilian_pizza_menu">Sicilian Pizza</a> |
+			<a href="#toppings_menu">Toppings</a> |
+			<a href="#subs_menu">Subs</a> |
+			<a href="#pasta_menu">Pasta</a> |
+			<a href="#salads_menu">Salad</a> |
+			<a href="#platters_menu">Dinner Platters</a> 
+		</div>
+		<table  class = "my_food">
+			<tr>
+				<th colspan="3" id = "pasta_menu">Pasta</th>
+			</tr>
+			{% for pasta in pastas %}
+				<tr>
+					<td>{{ pasta.name }}</td> <td>{{pasta.price}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<div class="internalmenunav">
+			<a href="#regular_pizza_menu">Regular Pizza</a> |
+			<a href="#sicilian_pizza_menu">Sicilian Pizza</a> |
+			<a href="#toppings_menu">Toppings</a> |
+			<a href="#subs_menu">Subs</a> |
+			<a href="#pasta_menu">Pasta</a> |
+			<a href="#salads_menu">Salad</a> |
+			<a href="#platters_menu">Dinner Platters</a> 
+		</div>
+		<table  class = "my_food">
+			<tr>
+				<th colspan="3" id = "salads_menu">Salads</th>
+			</tr>
+			{% for salad in salads %}
+				<tr>
+					<td>{{ salad.name }}</td><td>{{ salad.price }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<div class="internalmenunav">
+			<a href="#regular_pizza_menu">Regular Pizza</a> |
+			<a href="#sicilian_pizza_menu">Sicilian Pizza</a> |
+			<a href="#toppings_menu">Toppings</a> |
+			<a href="#subs_menu">Subs</a> |
+			<a href="#pasta_menu">Pasta</a> |
+			<a href="#salads_menu">Salad</a> |
+			<a href="#platters_menu">Dinner Platters</a> 
+		</div>
+		<table  class = "my_food">
+			<tr>
+				<th colspan="3" id = "platters_menu">Dinner Platters</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Small</td>
+				<td>Large</td>
+			</tr>
+			{% for k, v in platter_dict.items %}
+				<tr>
+					<td>{{ k }}</td>
+					<td>{{ v.0 }}</td>
+					<td>{{ v.1 }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<div id = "my_form">
+		<h2>Got something you like? Order it here!</h2>
+
+	<div class="internalmenunav">
+		<a href="#pizza_head">Pizzas</a> |
+		<a href="#sub_head">Subs</a> |
+		<a href="#pasta_head">Pasta</a> |
+		<a href="#salad_head">Salad</a> |
+		<a href="#platter_head">Dinner Platters</a> |
+		<a href="#cart_head">Shopping cart</a> |
+		<a href="#order_head">Orders</a> 
+	</div>
+
+	<h3 id = "pizza_head">Pizzas</h3>
+	<form action = "/pizzas/" method = "post" id = "pizza_form">
+		{% csrf_token %}
+		<div class = "form-group">
+			<label for = "pizza_type">What kind of pizza would you like?</label>
+			<select required class = "form-control" name = "pizza_type" id = "pizza_type">
+				{% for type in pizza_type %}
+				<option value = "{{ type }}">{{ type }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class = "form-group">
+			<label for = "pizza_size">What size would you like?</label>
+			<select required class = "form-control" name = "pizza_size" id = "pizza_size">
+				{% for size in pizza_size %}
+				<option value = "{{ size }}">{{ size }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class = "form-group">
+			<label for = "pizza_toppings">How many toppings would you like on your pizza?</label>
+			<select required class = "form-control" name = "pizza_toppings" id = "pizza_toppings">
+				{% for topping in pizza_toppings %}
+				<option value = "{{ topping }}">{{ topping }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<p>If you have selected the option of adding no toppings, you will receive a pizza with only cheese on it.</p>
+		<div class = "form-group" id = "topping_list" style="visibility: hidden;">
+			<p>You can select multiple titles and/or unselect the ones you already selected by pressing CTRL when you click on them.</p>
+			<label for = "topping_name">Which topping(s) would you like?</label>
+			<select class = "form-control" name = "topping_name" id = "topping_name" size = "5" multiple>
+				{% for name in topping_name %}
+				<option value = "{{ name }}">{{ name }}</option>
+				{% endfor %}
+			</select>
+			<br>
+			<div class = "alert alert-danger" id = "topping_error" style = "visibility: hidden;">
+				The number of toppings you have selected seems to be off.
+				Please make sure that you've got the pizza you want!
+			</div>
+		</div>
+		<label for = "pizza_price">Price:</label>
+		<div class = "form-group" id = "pizza_price" name = "pizza_price"></div>
+		
+		<button type = "submit" class = "btn" id = "pizza_button">Add to Cart</button>
+		
+	</form>
+
+	<div class="internalmenunav">
+		<a href="#pizza_head">Pizzas</a> |
+		<a href="#sub_head">Subs</a> |
+		<a href="#pasta_head">Pasta</a> |
+		<a href="#salad_head">Salad</a> |
+		<a href="#platter_head">Dinner Platters</a> |
+		<a href="#cart_head">Shopping cart</a> |
+		<a href="#order_head">Orders</a> 
+	</div>
+
+	<h3 id = "sub_head">Subs</h3>
+	<form action = "/subs/" method = "post" id = "sub_form">
+		{% csrf_token %}
+
+		<div class = "form-group">
+			<label for = "sub_size">What size would you like?</label>
+			<select required class = "form-control" name = "sub_size" id = "sub_size">
+				{% for size in sub_size %}
+				<option value = "{{ size }}">{{ size }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class = "form-group">
+			<label for = "sub_name">Which sub would you like?</label>
+			<select required class = "form-control" name = "sub_name" id = "sub_name">
+				{% for name in sub_name %}
+				<option value = "{{ name }}">{{ name }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class = "form-group" id = "sub_extras" style = "visibility: hidden;">
+			<p>You may add these extras for 0.50 each.</p>
+			<p>You can select multiple titles and/or unselect the ones you already selected by pressing CTRL when you click on them.</p>
+			<label for = "extra_name">Which extra(s) would you like?</label>
+			<select class = "form-control" name = "extra_name" id = "extra_name" size = "3" multiple>
+				{% for name in extra_name %}
+				<option value = "{{ name }}">{{ name }}</option>
+				{% endfor %}
+			</select>
+		</div>
+			<div class = "form-group">
+				<label for = "extra_cheese">Add extra cheese for 0.50?</label>
+				<input type = "checkbox" name = "extra_cheese" id = "extra_cheese" value = "no">Yes<br>
+			</div>
+			<label for = "sub_price">Price:</label>
+			<div class = "form-group" id = "sub_price" name = "sub_price"></div>
+		
+		<button type = "submit" class = "btn">Add to Cart</button>
+		
+	</form>
+
+	<div class="internalmenunav">
+		<a href="#pizza_head">Pizzas</a> |
+		<a href="#sub_head">Subs</a> |
+		<a href="#pasta_head">Pasta</a> |
+		<a href="#salad_head">Salad</a> |
+		<a href="#platter_head">Dinner Platters</a> |
+		<a href="#cart_head">Shopping cart</a> |
+		<a href="#order_head">Orders</a> 
+	</div>
+
+	<h3 id = "pasta_head">Pasta</h3>
+	<form action = "/pasta/" method = "post">
+		{% csrf_token %}
+		<div class = "form-group">
+			<label for = "pasta_name">Which pasta would you like?</label>
+			<select required class = "form-control" name = "pasta_name" id = "pasta_name">
+				{% for k, v in pasta_dict.items %}
+				<option value = "{{ k }}">{{ k }} ({{ v }})</option>
+				{% endfor %}
+			</select>
+		</div>
+		<button type = "submit" class = "btn">Add to Cart</button>
+		
+	</form>
+
+	<div class="internalmenunav">
+		<a href="#pizza_head">Pizzas</a> |
+		<a href="#sub_head">Subs</a> |
+		<a href="#pasta_head">Pasta</a> |
+		<a href="#salad_head">Salad</a> |
+		<a href="#platter_head">Dinner Platters</a> |
+		<a href="#cart_head">Shopping cart</a> |
+		<a href="#order_head">Orders</a> 
+	</div>
+
+	<h3 id = "salad_head">Salads</h3>
+	<form action = "/salads/" method = "post">
+		{% csrf_token %}
+		<div class = "form-group">
+			<label for = "salad_name">Which salad would you like?</label>
+			<select required class = "form-control" name = "salad_name" id = "salad_name">
+				{% for k, v in salad_dict.items %}
+				<option value = "{{ k }}">{{ k }} ({{ v }})</option>
+				{% endfor %}
+			</select>
+		</div>
+		<button type = "submit" class = "btn">Add to Cart</button>
+		
+	</form>
+
+	<div class="internalmenunav">
+		<a href="#pizza_head">Pizzas</a> |
+		<a href="#sub_head">Subs</a> |
+		<a href="#pasta_head">Pasta</a> |
+		<a href="#salad_head">Salad</a> |
+		<a href="#platter_head">Dinner Platters</a> |
+		<a href="#cart_head">Shopping cart</a> |
+		<a href="#order_head">Orders</a> 
+	</div>
+
+	<h3 id = "platter_head">Dinner Platters</h3>
+	<form action = "/platters/" method = "post" id = "platter_form">
+		{% csrf_token %}
+		<div class = "form-group">
+			<label for = "platter_size"> What size would you like?</label>
+			<select required class = "form-control" name = "platter_size" id = "platter_size" autofocus>
+				{% for size in platter_size %}
+					<option value = "{{ size }}">{{ size }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class = "form-group">
+			<label for = "platter_name">Which platter would you like?</label>
+			<select required class = "form-control" name = "platter_name" id = "platter_name">
+				{% for name in platter_name %}
+				<option value = "{{ name }}">{{ name }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<label for = "platter_price">Price:</label>
+		<div class="form-group" id = "platter_price"></div>
+		<button type = "submit" class = "btn">Add to Cart</button>
+		
+	</form>
+	</div>
+	
+
+{% endblock %}
+
+{% block cart %}
+	
+	<table class = "my_food">
+	<tr>
+		<th id = "cart_head">Shopping cart</th>
+	</tr>
+	<tr>
+		<th>Title</th>
+		<th>Price</th>
+	</tr>
+	{% for object in cart %}
+	<tr>
+		<td>{{ object.title }}</td>
+		<td>{{ object.price }}</td>
+		<td><button data-my_id = "{{ object.id }}" class = " btn delete-button">Delete</button></td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<td>Total:</td>
+		<td>{{ total }}</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td><button id = "empty_cart" name = "empty_cart" class = "btn">Empty Cart</button></td>
+	</tr>
+</table>
+<button class = "btn" id = "place_order" name = "place_order">Place Order</button>
+{% endblock %}
+
+{% block orders %}
+<table class = "my_food">
+	<tr>
+		<th id = "order_head">Orders</th>
+	</tr>
+	<tr>
+		<th>Title</th>
+		<th>Price</th>
+		<th>Status</th>
+	</tr>
+	{% for order in orders %}
+	<tr>
+		<td>{{order.title}}</td>
+		<td>{{order.price}}</td>
+		<td>{{order.status}}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<div class="internalmenunav">
+	<a href="#my_menu">Back to top</a>
+</div>
+{% endblock %}

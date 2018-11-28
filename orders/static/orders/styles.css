@@ -1,0 +1,76 @@
+h1 {
+
+	text-align: center;
+}
+
+
+div.internalmenunav {
+    text-align: center;
+    font-size: 64%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    background-color: #cccccc;
+}
+
+tr, td {
+
+	vertical-align: top;
+}
+
+table {
+	
+	border-collapse: separate;
+	border-spacing: 2px;
+}
+
+.my_food td {
+
+	border-bottom: 1px solid black;
+}
+
+.form-group, .form-control {
+	width: auto;
+}
+
+.navbar-brand {
+
+	color: #000;
+	font-size: xx-large;
+}
+
+#my_menu {
+
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+    font-size: 1.25em;
+    text-align: center;
+    border: medium solid #be0027;
+    background-color: #ffffff;
+    margin: 0.5em;
+    padding: 0.5em;
+    width: 49%;
+    display: table-cell;
+}
+
+#my_form {
+
+	width: 49%;
+	display: table-cell;
+	padding-left: 100px;
+	font-size: 1.25em;
+}
+
+main {
+	background-color: #239346;
+	display: table-row;
+}
+
+.my_toppings td {
+
+	width: 50%;
+}
+
+h3 {
+
+	padding-top: 10px;
+	text-align: center;
+}
