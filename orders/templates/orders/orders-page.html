@@ -1,0 +1,23 @@
+{% extends "orders/base.html" %}
+
+{% block title %}Orders{% endblock %}
+
+{% block main %}
+<table class = "table">
+	<tr>
+		<th>Orders</th>
+	</tr>
+	<tr>
+		<th>Title</th>
+		<th>Price</th>
+		<th>Status</th>
+	</tr>
+	{% for order in orders %}
+	<tr>
+		<td>{{order.title}}</td>
+		<td>{{order.price}}</td>
+		<td>{{order.status}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}
