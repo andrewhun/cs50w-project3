@@ -3,6 +3,8 @@
 - Provided some basic tests in tests.py
 - Simplified the way the JavaScript module handles AJAX requests. There were two similar functions in this area, now there is one.
 - Few minor changes here and there (adding/removing spaces here and there, that kind of thing)
+- Integrated the repo with Travis CI, added a YML file. Tests are now run automatically with every commit.
+- Added a Docker image to the repo. Failed to test as Docker doesn't like something in my BIOS settings. Will have to check that out later.
 
 
 
