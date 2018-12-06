@@ -56,13 +56,6 @@ class Sub(models.Model):
 	def __str__(self):
 		return f"{self.size} {self.name}"
 
-class Extra(models.Model):
-
-	name = models.CharField(max_length = 50)
-
-	def __str__(self):
-		return self.name
-
 class Cart(models.Model):
 
 	user = models.ForeignKey(User, on_delete = models.CASCADE)
@@ -85,4 +78,12 @@ class Order(models.Model):
 
 	def __str__(self):
 		return f"{self.user}: {self.title} for {self.price}"
+
+
+class Extra(models.Model):
+
+	name = models.CharField(max_length = 50)
+
+	def __str__(self):
+		return self.name
 

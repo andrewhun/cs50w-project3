@@ -383,7 +383,7 @@
 	
 	<table class = "my_food">
 	<tr>
-		<th id = "cart_head">Shopping cart</th>
+		<th id = "cart_head">Shopping Cart</th>
 	</tr>
 	<tr>
 		<th>Title</th>
@@ -398,7 +398,7 @@
 	{% endfor %}
 	<tr>
 		<td>Total:</td>
-		<td>{{ total }}</td>
+		<td id = "cart_total" data-total = "{{ total }}">{{ total }}</td>
 		<td></td>
 	</tr>
 	<tr>

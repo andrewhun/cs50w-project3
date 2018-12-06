@@ -142,7 +142,7 @@ def shopping_cart(request, Food, name, size = "", toppings = "", extras = "", ch
 			my_topping = ""
 			for topping in topping_list:
 				my_topping = f"{my_topping} {topping},"
-			food = f"{food} pizza with {toppings} topping(s): {my_topping}"
+			food = f"{food} pizza with {toppings} topping(s):{my_topping}"
 		
 	# the user wants to add a sub to the shopping cart
 	elif size and extras:
@@ -165,7 +165,7 @@ def shopping_cart(request, Food, name, size = "", toppings = "", extras = "", ch
 			for extra in extras:
 				my_extras = f"{my_extras} {extra},"
 			
-			food = f"{food} with  {len(extras)} extras: {my_extras}"
+			food = f"{food} with {len(extras)} extra(s):{my_extras}"
 		
 		# the user wants extra cheese
 		if cheese == "yes":

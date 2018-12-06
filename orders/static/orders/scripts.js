@@ -1,10 +1,10 @@
 // Execute when the DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
 
-	// Show prices for the pizza, sub and platter that is selected by default
-	priceCalculator(document.querySelector("#pizza_price"), pizzaData());
-	priceCalculator(document.querySelector("#sub_price"), subData());
-	priceCalculator(document.querySelector("#platter_price"), platterData());
+	// Show prices for the pizza, sub and platter that are selected by default
+	myRequest("/price/", pizzaData(), "#pizza_price");
+	myRequest("/price/", subData(), "#sub_price");
+	myRequest("/price/", platterData(), "#platter_price");
 
 	
 	// JS for the "pizzas" form
@@ -17,10 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	var topping_error = document.querySelector("#topping_error");
 	var pizza_button = document.querySelector("#pizza_button");
 
+
 	// Recalculate prices every time the form changes
 	pizza_form.onchange = () => {
 
-		priceCalculator(document.querySelector("#pizza_price"), pizzaData());
+
+
+		myRequest("/price/", pizzaData(), "#pizza_price");
 	}
 
 	// Sort out toppings
@@ -110,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Recalculate price every time the form changes
 	sub_form.onchange = () => {	
 
-		priceCalculator(document.querySelector("#sub_price"), subData());
+		myRequest("/price/",subData(), "#sub_price" );
 		
 	};
 
@@ -122,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Recalculate price every time the form changes
 	platter_form.onchange = () => {
 
-		priceCalculator(document.querySelector("#platter_price"), platterData());
+		myRequest("/price/", platterData(), "#platter_price");
 	}
 
 	// JS for the shopping cart
@@ -134,34 +137,47 @@ document.addEventListener("DOMContentLoaded", () => {
 			document.querySelector("#place_order").disabled = true;
 		};
 
-		// Execute when a "delete" button is clicked
-		document.querySelectorAll(".delete-button").forEach(button => {
-			button.onclick = () => {
-				
-				// Delete the title that is associated with the delete button and reload the page
-				var my_id = button.dataset.my_id;
-				
-				postCart(deleteCart(my_id));
-				location.reload();
-			}
-
-		});
-
-
-		// Empty shopping cart when the button is clicked, then reload the page
-		document.querySelector("#empty_cart").onclick = () => {
-
-			postCart(emptyCart());
-			location.reload();
-
-		};
-
-		// Place order when the button is clicked, then reload the page
-		document.querySelector("#place_order").onclick = () => {
-
-			postCart(placeOrder());
+	// Execute when a "delete" button is clicked
+	document.querySelectorAll(".delete-button").forEach(button => {
+		button.onclick = () => {
+			
+			// Delete the title that is associated with the delete button and reload the page
+			var delete_data = {'post_type': 'delete', 'my_id': button.dataset.my_id};
+			
+			myRequest("/cart/", delete_data, "");
 			location.reload();
 		}
+
+	});
+
+
+	// Empty shopping cart when the button is clicked, then reload the page
+	document.querySelector("#empty_cart").onclick = () => {
+		
+		var empty_data = {'post_type': 'empty'};
+		myRequest("/cart/", empty_data, "");
+		location.reload();
+
+	};
+
+	// Place order when the button is clicked, then reload the page
+	document.querySelector("#place_order").onclick = () => {
+
+		var item_number = document.querySelectorAll(".delete-button").length
+		var total = document.querySelector("#cart_total").dataset.total;
+
+		c = confirm(`You are about to place an order for ${String(item_number)} items, costing you a total of` +
+			` ${total} USD. Do you wish to proceed?`);
+
+		if (c == true) {
+
+			var place_data = {'post_type': 'place_order'};
+			myRequest("/cart/", place_data, "");
+			location.reload();
+		}
+	}
+});
+
 
 // Check toppings
 function toppingChecker() {
@@ -199,45 +215,13 @@ function toppingChecker() {
 	}
 };
 
-// Calculates prices
-function priceCalculator(div, my_function) {
-
-
-	// Send a POST request to the server
-	const request = new XMLHttpRequest();
-	request.open("POST", "/price/");
-	
-	
-	request.onload = () => {
-		
-		// The server's response is the calculated price itself
-		div.innerHTML = request.response;
-	}
-	
-	// The data sent to the server varies based on which food's (pizza, sub or platter) price is in question
-	const data = my_function;
-
-	// Add a csrf-token to the request headers so that Django accepts the request
-	var csrftoken = Cookies.get("csrftoken");
-	request.setRequestHeader("X-CSRFToken", csrftoken);
-
-	// Send the data
-	request.send(data);
-
-}
 
 // Organizes information collected from the pizza form
 function pizzaData() {
 
-	const data = new FormData();
-	
-	// Let the server know which kind of food it needs to calculate a price for
-	data.append('food_type', 'pizzas');
-
-	// Add relevant info to the formdata
-	data.append('pizza_size', document.querySelector("#pizza_size").value);
-	data.append('pizza_type', document.querySelector("#pizza_type").value);
-	data.append('pizza_toppings', document.querySelector("#pizza_toppings").value);
+	var data = {'food_type': 'pizzas', 'pizza_size': document.querySelector("#pizza_size").value,
+				'pizza_type': document.querySelector("#pizza_type").value,
+				'pizza_toppings': document.querySelector("#pizza_toppings").value};
 
 	return data;
 }
@@ -245,16 +229,10 @@ function pizzaData() {
 // Organizes information collected from the sub form
 function subData() {
 
-	const data = new FormData();
-	
-	// Let the server know which kind of food it needs to calculate a price for
-	data.append('food_type', 'subs');
-
-	// Add relevant info to the formdata
-	data.append('sub_size', document.querySelector("#sub_size").value);
-	data.append('sub_name', document.querySelector("#sub_name").value);
-	data.append('sub_extras', document.querySelector("#extra_name").selectedOptions.length);	
-	data.append('extra_cheese', document.querySelector("#extra_cheese").value);
+	var data = {'food_type': 'subs', 'sub_name': document.querySelector("#sub_name").value,
+				'sub_size': document.querySelector("#sub_size").value,
+				"sub_extras": document.querySelector("#extra_name").selectedOptions.length,
+				"extra_cheese": document.querySelector("#extra_cheese").value};
 
 	return data;
 }
@@ -262,67 +240,42 @@ function subData() {
 // Organizes information collected from the platter form
 function platterData() {
 
-	const data = new FormData();
-	// Let the server know which kind of food it needs to calculate a price for
-	data.append('food_type', 'platters');
-
-	// Add relevant info to the formdata
-	data.append('platter_size', document.querySelector("#platter_size").value);
-	data.append('platter_name', document.querySelector("#platter_name").value);
-
+	var data = {'food_type': 'platters', 'platter_size': document.querySelector("#platter_size").value,
+				'platter_name': document.querySelector("#platter_name").value};
+	
 	return data;
 }
 
-// Sends POST requests related to the shopping cart
-function postCart(my_function) {
+// Sends an AJAX request to the server
+function myRequest(url, my_item, div) {
 
-	// Send a POST request
+	// Create new request and open it to the specified url
 	const request = new XMLHttpRequest();
-		request.open("POST", "/cart/");
 
-		// The data sent to the server varies on what action does the user want to take (delete an element,
-		// empty the cart, place an order)
-		const data = my_function;
+	request.open("POST", url);
 
-		// Add csrf-token to the request's header
-		var csrftoken = Cookies.get("csrftoken");
-		request.setRequestHeader("X-CSRFToken", csrftoken);
+	// The div argument is only relevant if the request is sent to /price/
+	if (url == "/price/") {
 
-		// Send the data
-		request.send(data);
-}
+		request.onload = () => {
 
-// Organizes the data needed to delete an element from the shopping cart
-function deleteCart(my_id) {
+			document.querySelector(div).innerHTML = request.response;
 
+		}
+	}
+
+	// Load the preorganized data into the request
 	const data = new FormData();
-	
-	// Let the server know which action is the user taking
-	data.append("post_type", "delete");
-	
-	// Add the selected element's id to the formdata
-	data.append("my_id", my_id);
-	
-	return data;
-}
 
-// Organizes the data needed to empty the shopping cart
-function emptyCart() {
+	for (var key in my_item) {
 
-	const data = new FormData();
-	
-	// Let the server know what's happening
-	data.append("post_type", "empty");
-	
-	return data;
-}
-// Organizes the data needed to place an order
-function placeOrder() {
+		data.append(key, my_item[key]);
+	}
 
-	const data = new FormData();
-	
-	// Let the server know what is happening
-	data.append("post_type", "place_order");
+	// Add the CSRF token to the request's header
+	var csrftoken = Cookies.get("csrftoken");
+	request.setRequestHeader("X-CSRFToken", csrftoken);
 
-	return data;
+	// Send the request
+	request.send(data); 
 }

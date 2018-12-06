@@ -4,10 +4,9 @@ from django.db.models import Sum
 from django.shortcuts import render
 from .forms import RegisterForm, LoginForm
 from django.contrib.auth.models import User
-from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from .models import Pasta, Salad, Topping, Pizza, Platter, Sub, Extra, Cart, Order
+from .models import Pasta, Salad, Topping, Pizza, Platter, Sub, Cart, Order, Extra
 from .helpers import organize_pizzas, organize_subs, organize_platters, form_organizer_1, form_organizer_2, shopping_cart
 
 
@@ -79,7 +78,7 @@ def index(request):
 			# if the user has logged in show them the main page
 			return render(request, "orders/index.html", context = context)
 	else:
-		return HttpResponseRedirect(reverse(request.POST["food_type"]))
+		return HttpResponse("Error. Wrong request method.")
 
 
 def pizza_view(request):
@@ -215,7 +214,7 @@ def cart_view(request):
 			total = cart.aggregate(Sum("price"))["price__sum"]
 			my_order = ""
 			for my_object in cart:
-				my_order = f"{my_order}  {my_object.title},"
+				my_order = f"{my_order} {my_object.title},"
 
 			o = Order(user = request.user, title = my_order, price = total)
 			o.save()
