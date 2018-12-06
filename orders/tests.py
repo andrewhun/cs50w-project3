@@ -73,7 +73,7 @@ class RegisterCase(TestCase):
 		self.assertEqual(len(User.objects.all()), 3)
 
 class LoginCase(TestCase):
-''' Test the Login url and view. '''
+	''' Test the Login url and view. '''
 
 	def setUp(self):
 		
@@ -148,6 +148,7 @@ class LogoutCase(TestCase):
 
 class IndexCase(TestCase):
 	''' Test the main page and the index view '''
+
 	def setUp(self):
 
 		User.objects.create_user(username = "test1", email = "test1@test.com",
@@ -192,7 +193,7 @@ class IndexCase(TestCase):
 
 
 class PizzaCase(TestCase):
-''' Test the Pizza model, url, menu, form, view and price. Test the Topping model. '''
+	''' Test the Pizza model, url, menu, form, view and price. Test the Topping model. '''
 
 	def setUp(self):
 
@@ -331,6 +332,7 @@ class PizzaCase(TestCase):
 
 class SubCase(TestCase):
 	''' Test the Sub model, url, menu, form, view and price.  Test the Extra model.'''
+
 	def setUp(self):
 
 		Sub.objects.create(name = "Cheese", size = "Small", price = 6.50)
@@ -614,6 +616,7 @@ class SaladCase(TestCase):
 
 class PlatterCase(TestCase):
 	''' Test the Dinner Platter model, url, menu, form, view and price. '''
+	
 	def setUp(self):
 
 		Platter.objects.create(name = "Garden Salad", size = "Small", price = 35.00)
