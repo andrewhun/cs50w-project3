@@ -1,3 +1,12 @@
+# Changelog for v1.1
+
+- Provided some basic tests in tests.py
+- Simplified the way the JavaScript module handles AJAX requests. There were two similar functions in this area, now there is one.
+- Few minor changes here and there (adding/removing spaces here and there, that kind of thing)
+
+
+
+
 # cs50w-project3
 This is my implementation of the fourth project in the CS50W course. Our tasks in this project were to become more comfortable with using Django and to gain experience in relational database design. In order to achieve this, we needed to design a restaurant website based on Pinocchio's Pizza and Subs (http://www.pinocchiospizza.net/index.html). The project had 7 requirements: 
 
