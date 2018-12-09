@@ -1,5 +1,6 @@
 # Changelog for v1.1
 
+- An attempt was made to reduce complexity, especially in regards to some of the functions in helpers.py (I'm currently reading Code Complete from Steve McConnell, and am actively trying to implement some of the methods described in it)
 - Provided some basic tests in tests.py
 - Simplified the way the JavaScript module handles AJAX requests. There were two similar functions in this area, now there is one.
 - Few minor changes here and there (adding/removing spaces here and there, that kind of thing)
