@@ -2,9 +2,9 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 	// Show prices for the pizza, sub and platter that are selected by default
-	myRequest("/price/", pizzaData(), "#pizza_price");
-	myRequest("/price/", subData(), "#sub_price");
-	myRequest("/price/", platterData(), "#platter_price");
+	sendAjaxRequest("/price/", pizzaData(), "#pizza_price");
+	sendAjaxRequest("/price/", subData(), "#sub_price");
+	sendAjaxRequest("/price/", platterData(), "#platter_price");
 
 	
 	// JS for the "pizzas" form
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-		myRequest("/price/", pizzaData(), "#pizza_price");
+		sendAjaxRequest("/price/", pizzaData(), "#pizza_price");
 	}
 
 	// Sort out toppings
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Recalculate price every time the form changes
 	sub_form.onchange = () => {	
 
-		myRequest("/price/",subData(), "#sub_price" );
+		sendAjaxRequest("/price/",subData(), "#sub_price" );
 		
 	};
 
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Recalculate price every time the form changes
 	platter_form.onchange = () => {
 
-		myRequest("/price/", platterData(), "#platter_price");
+		sendAjaxRequest("/price/", platterData(), "#platter_price");
 	}
 
 	// JS for the shopping cart
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			// Delete the title that is associated with the delete button and reload the page
 			var delete_data = {'post_type': 'delete', 'my_id': button.dataset.my_id};
 			
-			myRequest("/cart/", delete_data, "");
+			sendAjaxRequest("/cart/", delete_data, "");
 			location.reload();
 		}
 
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	document.querySelector("#empty_cart").onclick = () => {
 		
 		var empty_data = {'post_type': 'empty'};
-		myRequest("/cart/", empty_data, "");
+		sendAjaxRequest("/cart/", empty_data, "");
 		location.reload();
 
 	};
@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (c == true) {
 
 			var place_data = {'post_type': 'place_order'};
-			myRequest("/cart/", place_data, "");
+			sendAjaxRequest("/cart/", place_data, "");
 			location.reload();
 		}
 	}
@@ -229,9 +229,18 @@ function pizzaData() {
 // Organizes information collected from the sub form
 function subData() {
 
+	selected_extras = document.querySelector("#extra_name").selectedOptions;
+
+	var extras = [];
+	for (var i = 0; i < selected_extras.length; i++ ) {
+
+		extras.push(selected_extras[i].value);
+
+	}
+
 	var data = {'food_type': 'subs', 'sub_name': document.querySelector("#sub_name").value,
 				'sub_size': document.querySelector("#sub_size").value,
-				"sub_extras": document.querySelector("#extra_name").selectedOptions.length,
+				"sub_extras": JSON.stringify(extras),
 				"extra_cheese": document.querySelector("#extra_cheese").value};
 
 	return data;
@@ -247,7 +256,7 @@ function platterData() {
 }
 
 // Sends an AJAX request to the server
-function myRequest(url, my_item, div) {
+function sendAjaxRequest(url, my_item, div) {
 
 	// Create new request and open it to the specified url
 	const request = new XMLHttpRequest();
@@ -265,12 +274,7 @@ function myRequest(url, my_item, div) {
 	}
 
 	// Load the preorganized data into the request
-	const data = new FormData();
-
-	for (var key in my_item) {
-
-		data.append(key, my_item[key]);
-	}
+	const data = populateFormData(my_item);
 
 	// Add the CSRF token to the request's header
 	var csrftoken = Cookies.get("csrftoken");
@@ -278,4 +282,17 @@ function myRequest(url, my_item, div) {
 
 	// Send the request
 	request.send(data); 
+}
+
+function populateFormData(object) {
+	// Prepare data which is then sent to the server
+
+	const data = new FormData();
+
+	for (var key in object) {
+
+		data.append(key, object[key]);
+	}
+
+	return data;
 }

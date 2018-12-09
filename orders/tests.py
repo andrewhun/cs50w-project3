@@ -1,3 +1,4 @@
+import json
 from django.urls import reverse, resolve
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -156,10 +157,6 @@ class IndexCase(TestCase):
 			password = "testpass1",)
 
 		user = User.objects.get(username = "test1")
-
-		Cart.objects.create(user = user, title = "Baked Ziti pasta", price = 6.50)
-		Order.objects.create(user = user, title = "Antipasto salad, Small Sicilian pizza,", price = 42.20,
-		 status = "Pending")
 
 	def test_index_url(self):
 
@@ -475,12 +472,12 @@ class SubCase(TestCase):
 		c.login(username = "test1", password = "testpass1")
 
 		response = c.post(reverse("price"), {"food_type": "subs", "sub_name": "Cheese", "sub_size": "Small",
-			"sub_extras": 0, "extra_cheese": "no"})
+			"sub_extras": json.dumps([]), "extra_cheese": "no"})
 
 		self.assertEqual("b'6.5'", str(response.content))
 
 		response2 = c.post(reverse("price"), {"food_type": "subs", "sub_name": "Sausage, Peppers & Onions",
-			"sub_size": "Large", "sub_extras": 2, "extra_cheese": "yes"})
+			"sub_size": "Large", "sub_extras": json.dumps(["Mushrooms", "Onions"]), "extra_cheese": "yes"})
 
 		self.assertEqual("b'10.0'", str(response2.content))
 

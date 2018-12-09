@@ -7,8 +7,9 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Pasta, Salad, Topping, Pizza, Platter, Sub, Cart, Order, Extra
-from .helpers import organize_pizzas, organize_subs, organize_platters, form_organizer_1, form_organizer_2, shopping_cart
-
+from .helpers import organize_pizzas, organize_subs, organize_platters, form_organizer_1, form_organizer_2
+from .helpers import create_title_from_pizza, get_current_user, create_cart_object, create_title_from_pasta
+from .helpers import create_title_from_salad, create_title_from_platter, create_title_from_sub, calculate_sub_price
 
 
 # Create your views here.
@@ -96,9 +97,14 @@ def pizza_view(request):
 		else:
 			my_toppings = request.POST.getlist("topping_name")
 
-		# add the selected pizza to the shopping cart
-		shopping_cart(request, Pizza, request.POST["pizza_type"], request.POST["pizza_size"], 
-			toppings = request.POST["pizza_toppings"], topping_list = my_toppings)
+		
+		# add the selected pizza to the user's shopping cart
+		pizza = Pizza.objects.get(name = request.POST["pizza_type"], size = request.POST["pizza_size"],
+			toppings = request.POST["pizza_toppings"])
+		price = pizza.price
+		title = create_title_from_pizza(pizza, my_toppings)
+		user = get_current_user(request)
+		create_cart_object(user, title, price)
 
 		# reload the page
 		return HttpResponseRedirect(reverse("index"))
@@ -112,8 +118,13 @@ def pasta_view(request):
 		return HttpResponse("Error. Wrong request method.")
 
 	else:
-		# add the selected pasta to the shopping cart
-		shopping_cart(request, Pasta, request.POST["pasta_name"])
+		
+		# add the selected pasta to the user's shopping cart
+		pasta = Pasta.objects.get(name = request.POST["pasta_name"])
+		title = create_title_from_pasta(pasta)
+		price = pasta.price
+		user = get_current_user(request)
+		create_cart_object(user, title, price)
 
 		# reload the page
 		return HttpResponseRedirect(reverse("index"))
@@ -127,8 +138,13 @@ def salad_view(request):
 		return HttpResponse("Error. Wrong request method.")
 
 	else:
-		# add the selected salad to the shopping cart
-		shopping_cart(request, Salad, request.POST["salad_name"])
+		
+		# add the selected salad to the user's shopping cart
+		salad = Salad.objects.get(name = request.POST["salad_name"])
+		title = create_title_from_salad(salad)
+		price = salad.price
+		user = get_current_user(request)
+		create_cart_object(user, title, price)
 		
 		return HttpResponseRedirect(reverse("index"))
 
@@ -142,8 +158,12 @@ def platter_view(request):
 
 	else:
 
-		# add the selected platter to the shopping cart
-		shopping_cart(request, Platter, request.POST["platter_name"], request.POST["platter_size"])
+		# add the selecte dinner platter to the user's shopping cart
+		platter = Platter.objects.get(name = request.POST["platter_name"], size = request.POST["platter_size"])
+		title = create_title_from_platter(platter)
+		price = platter.price
+		user = get_current_user(request)
+		create_cart_object(user, title, price)
 
 		# reload the page
 		return HttpResponseRedirect(reverse("index"))
@@ -164,16 +184,21 @@ def sub_view(request):
 		else:
 			cheese = request.POST["extra_cheese"]
 		
-		# check if the user wanted any other extras, then add the selected sub to the shopping cart
+		# check if the user wanted any other extras
 		if "extra_name" in request.POST.keys():
 		
-			shopping_cart(request, Sub, request.POST["sub_name"], request.POST["sub_size"],
-				extras = request.POST.getlist("extra_name"), cheese = cheese)
+				extras = request.POST.getlist("extra_name")
 		
 		else:
 			
-			shopping_cart(request, Sub, request.POST["sub_name"], request.POST["sub_size"],
-				extras = "no", cheese = cheese)
+				extras = "no"
+
+		# add the selected sub to the user's shopping cart
+		sub = Sub.objects.get(name = request.POST["sub_name"], size = request.POST["sub_size"])
+		title = create_title_from_sub(sub, extras, cheese)
+		price = calculate_sub_price(sub, extras, cheese)
+		user = get_current_user(request)
+		create_cart_object(user, title, price)
 		
 		# reload the page
 		return HttpResponseRedirect(reverse("index"))
@@ -192,8 +217,7 @@ def cart_view(request):
 		if request.POST["post_type"] == "delete":
 
 			c = Cart.objects.get(id = request.POST["my_id"])
-
-			print(c)
+			
 			c.delete()
 
 			return HttpResponseRedirect(reverse("cart"))
@@ -208,6 +232,7 @@ def cart_view(request):
 
 		# place an order
 		else:
+			
 			# create a new order object, using the titles of the shopping cart elements
 			# and the sum of their prices
 			cart = Cart.objects.filter(user = request.user)
@@ -246,33 +271,25 @@ def price_view(request):
 		# find the price of the selected pizza
 		if food_type == "pizzas":
 			
-			price = Pizza.objects.values_list("price").filter(name = request.POST["pizza_type"], 
+			pizza = Pizza.objects.get(name = request.POST["pizza_type"], 
 				size = request.POST["pizza_size"], toppings = request.POST["pizza_toppings"])
-
-			price = price[0]
+			price = pizza.price
 
 		# find the price of the selected sub
 		elif food_type == "subs":
 
-			price = Sub.objects.values_list("price").filter(name = request.POST["sub_name"],
+			sub = Sub.objects.get(name = request.POST["sub_name"],
 				size = request.POST["sub_size"])
-
-			price = float(price[0][0])
-
-			# increase the price according to the menu if the user wants any extras
-			price += (int(request.POST["sub_extras"]) * 0.50)
-
-			if request.POST["extra_cheese"] == "yes":
-
-				price += 0.50
+			extras = json.loads(request.POST["sub_extras"])
+			cheese = request.POST["extra_cheese"]
+			price = calculate_sub_price(sub, extras, cheese)
 
 		# find the price of the selected platter
 		else:
 
-			price = Platter.objects.values_list("price").filter(name = request.POST["platter_name"],
+			platter = Platter.objects.get(name = request.POST["platter_name"],
 				size = request.POST["platter_size"])
-
-			price = price[0]
+			price = platter.price
 
 		# return the price
 		return HttpResponse(price)

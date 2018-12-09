@@ -112,83 +112,94 @@ def form_organizer_2(Food):
 	# return the dictionary
 	return food_dict
 
-def shopping_cart(request, Food, name, size = "", toppings = "", extras = "", cheese = "", topping_list = ""):
-	''' Add selected foods to the user's shopping cart '''
-	
-	# the user wants to add a dinner platter to the shopping cart
-	if size and not (toppings or extras):
+def create_title_from_pizza(pizza, topping_list):
 
-		# grab the selected platter and its price
-		food = Food.objects.get(name = name, size = size)
-		price = food.price
+	# format the name according to what the user has selected
+	if pizza.toppings == 0:
 		
-		# format the name properly so the user can tell what's in their cart
-		food = f"{food} dinner platter"
-		
-	# the user wants to add a pizza to the shopping cart
-	elif size and toppings:
-		
-		# grab the selected pizza and its price
-		food = Food.objects.get(name = name, size = size, toppings = toppings)
-		price = food.price
-		
-		# format the name according to what the user has selected
-		if toppings == "0":
-			# no toppings means its a pizza with cheese
-			food = f"{food} pizza with cheese"
-		else:
-
-			# let users know what toppings are on their pizza
-			my_topping = ""
-			for topping in topping_list:
-				my_topping = f"{my_topping} {topping},"
-			food = f"{food} pizza with {toppings} topping(s):{my_topping}"
-		
-	# the user wants to add a sub to the shopping cart
-	elif size and extras:
-		
-		# grab the selected sub and its price
-		food = Food.objects.get(name = name, size = size)
-		price = food.price
-		price = float(price)
-		# let the user know the item is a sub
-		food = f"{food} sub"
-		
-		# the user wants to add extras to their sub
-		if extras != "no":
-
-			# adjust the price of the sub
-			price += len(extras) * 0.50
-
-			# let the user know what extras are added to the sub
-			my_extras = ""
-			for extra in extras:
-				my_extras = f"{my_extras} {extra},"
-			
-			food = f"{food} with {len(extras)} extra(s):{my_extras}"
-		
-		# the user wants extra cheese
-		if cheese == "yes":
-			
-			# let the user know this sub is with extra cheese
-			food = f"{food} with extra cheese"
-
-			# adjust the price of the sub
-			price += 0.50
-
-	# the user wants a salad or a pasta
+		# no toppings means its a pizza with cheese
+		title = f"{pizza} pizza with cheese"
 	else:
-		# grab the food and its price
-		food = Food.objects.get(name = name)
-		price = food.price
 
-		# let the user know what food they've got in their cart
-		if Food == Pasta:
-			food = f"{food} pasta"
-		elif Food == Salad and name == "Antipasto":
-			food = f"{food} salad"
+		# let users know what toppings are on their pizza
+		my_topping = ""
+		for topping in topping_list:
+			my_topping = f"{my_topping} {topping},"
+		title = f"{pizza} pizza with {pizza.toppings} topping(s):{my_topping}"
+	
+	return title
 
-	# create a new cart object and add it to the database
-	my_user = User.objects.get(username = request.user)
-	c = Cart(user = my_user, title = food, price = price)
+def create_title_from_platter(platter):
+	''' Create a shopping cart title from a dinner platter object. '''
+
+	title = f"{platter} dinner platter"
+
+	return title
+
+def create_title_from_sub(sub, extras, cheese):
+
+	''' Create a shopping cart title from a sub object. '''
+
+	title = f"{sub} sub"
+
+	if extras != "no":
+
+		# let the user know what extras are added to the sub
+		my_extras = ""
+		for extra in extras:
+			my_extras = f"{my_extras} {extra},"
+		
+		title = f"{title} with {len(extras)} extra(s):{my_extras}"
+
+	# let the user know if extra cheese has been added to the sub
+	if cheese == "yes":
+
+		title = f"{title} with extra cheese"
+
+	return title
+
+def create_title_from_pasta(pasta):
+	''' Create a shopping cart title from a pasta object. '''
+
+	title = f"{pasta} pasta"
+
+	return title
+
+def create_title_from_salad(salad):
+	''' Create a shopping cart title from a salad object. '''
+
+	if salad.name == "Antipasto":
+		title = f"{salad} salad"
+	else:
+		title = f"{salad}"
+
+	return title
+
+def calculate_sub_price(sub, extras, cheese):
+	''' Calculate the final price of the selected sub variation. '''
+
+	price = float(sub.price)
+
+	if extras != "no":
+
+		price += len(extras) * 0.50
+
+	if cheese == "yes":
+
+		price += 0.50
+
+	return price
+
+def create_cart_object(user, title, price):
+	''' Create a shopping cart object '''
+
+	c = Cart(user = user, title = title, price = price)
+	
 	c.save()
+
+def get_current_user(request):
+	''' Find the user associated with the current request. '''
+
+	current_user = User.objects.get(username = request.user)
+
+	return current_user
